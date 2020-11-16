@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { A } from 'hookrouter'
+import FinishTask from '../FinishTask/FinishTask'
 
 function TaskItems(props) {
 
@@ -18,6 +19,12 @@ function TaskItems(props) {
             {task.name}
           </td>
           <td className="text-right">
+            <FinishTask
+              task={task}
+              reloadTasks={props.reloadTasks}
+              className={task.finished ? 'hidden' : null}
+            />
+            &nbsp;
             <A 
               href={`/info/${task.id}`}
               className={task.finished ? 'hidden' : 'btn btn-warning btn-sm'}
