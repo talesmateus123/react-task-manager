@@ -3,7 +3,7 @@ import './InfoTask.css'
 
 function InfoTask() {
   return (
-    <h1>List Tasks</h1>
+    <h1>Info Task</h1>
   )
 }
 

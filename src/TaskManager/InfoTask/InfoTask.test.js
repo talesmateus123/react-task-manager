@@ -6,7 +6,7 @@ import '@testing-library/jest-dom/extend-expect'
 describe('InfoTask tests', () => {
     it('renders without crash', () => {
         const div = document.createElement('div')
-        ReactDOM.render(<InfoTask />, div);
+        ReactDOM.render(<InfoTask id={1} />, div);
         unmountComponentAtNode(div)
     });
 })
