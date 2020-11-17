@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { A } from 'hookrouter'
 import FinishTask from '../FinishTask/FinishTask'
+import RemoveTask from '../RemoveTask/RemoveTask'
 
 function TaskItems(props) {
 
@@ -31,6 +32,11 @@ function TaskItems(props) {
             >
               <FontAwesomeIcon icon={faEdit} />
             </A>
+            &nbsp;
+            <RemoveTask 
+              task={task}
+              reloadTasks={props.reloadTasks}
+            />
           </td>
         </tr>
       )
