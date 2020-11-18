@@ -5,21 +5,32 @@ import { Table } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import TaskItems from './TaskItems/TaskItems'
+import Pages from './Pages/Pages'
 
 function ListTasks() {
 
+  const ITEMS_PER_PAGE = 3
+
   const [ tasks, setTasks ] = useState([])
-  const [ tasksLoaded , setTasksLoaded ] = useState(false)
+  const [ loadTasks , setLoadTasks ] = useState(true)
+  const [ totalItems, setTotalItems] = useState(0)
+  const [ currentPage, setCurrentPage ] = useState(1)
+
+  const handleChangePage = page => {
+    setCurrentPage(page)
+    setLoadTasks(true)
+  }
 
   useEffect(() => {
     const getTasks = () => {
       const tasks = localStorage.tasks ? JSON.parse(localStorage.tasks) : []
-      setTasks(tasks)
+      setTotalItems(tasks.length)
+      setTasks(tasks.splice((currentPage - 1) * ITEMS_PER_PAGE, ITEMS_PER_PAGE))
     }
-    if(!tasksLoaded) {
+    if(loadTasks) {
       getTasks()
     }
-  }, [ tasksLoaded ])
+  }, [ loadTasks, currentPage ])
 
   return (
     <div className="text-center">
@@ -44,10 +55,15 @@ function ListTasks() {
           </tr>
         </thead>
         <tbody>
-          <TaskItems tasks={tasks} reloadTasks={() => false} />
+          <TaskItems tasks={tasks} reloadTasks={setLoadTasks} />
         </tbody>
       </Table>
-      
+      <Pages
+        totalItems={totalItems}
+        itemsPerPage={ITEMS_PER_PAGE}
+        currentPage={currentPage}
+        changePage={handleChangePage}
+      />
     </div>
   )
 }
