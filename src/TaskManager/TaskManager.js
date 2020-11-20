@@ -8,7 +8,7 @@ import InfoTask from './InfoTask/InfoTask'
 const routes = {
   '/': () => <ListTasks />,
   '/new': () => <NewTask />,
-  '/info/:id': ({id}) => <InfoTask id={id} />
+  '/info/:id': ({id}) => <InfoTask id={parseInt(id)} />
 }
 
 function TaskManager() {
