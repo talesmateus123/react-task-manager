@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './ListTasks.css'
 import { A } from 'hookrouter'
-import { Table } from 'react-bootstrap'
+import { Form, Table } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import TaskItems from './TaskItems/TaskItems'
@@ -19,6 +19,8 @@ function ListTasks() {
 
   const [ sortAsc, setSortAsc ] = useState(false)
   const [ sortDesc, setSortDesc ] = useState(false)
+
+  const [ taskFilter, setTaskFilter ] = useState('')
 
   const handleChangePage = page => {
     setCurrentPage(page)
@@ -42,9 +44,16 @@ function ListTasks() {
     setLoadTasks(true)
   }
 
+  const handleFilter = event => {
+    setTaskFilter(event.target.value)
+    setLoadTasks(true)
+  }
+
   useEffect(() => {
     const getTasks = () => {
       let tasks = localStorage.tasks ? JSON.parse(localStorage.tasks) : []
+      // filtering
+      tasks = tasks.filter(task => task.name.toLowerCase().indexOf(taskFilter.toLowerCase()) === 0)
       // sorting
       if(sortAsc) {
         tasks.sort((task1, task2) => task1.name.toLowerCase() > task2.name.toLowerCase() ? 1 : -1)
@@ -59,7 +68,7 @@ function ListTasks() {
     if(loadTasks) {
       getTasks()
     }
-  }, [ loadTasks, currentPage, sortAsc, sortDesc ])
+  }, [ loadTasks, currentPage, sortAsc, sortDesc, taskFilter ])
 
   return (
     <div className="text-center">
@@ -89,6 +98,20 @@ function ListTasks() {
                 &nbsp;
                 New task
               </A>
+            </th>
+          </tr>
+          <tr>
+            <th>
+              <Form.Control 
+                type="text"
+                value={taskFilter}
+                onChange={handleFilter}
+                data-testid="task-filter"
+                className="task-filter"
+              />
+            </th>
+            <th>
+              &nbsp;
             </th>
           </tr>
         </thead>
