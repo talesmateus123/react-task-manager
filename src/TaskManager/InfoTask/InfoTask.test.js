@@ -18,4 +18,13 @@ describe('InfoTask tests', () => {
         ReactDOM.render(<InfoTask id={taskId} />, div);
         unmountComponentAtNode(div)
     });
+
+    it('must to updates a task', () => {
+        const taskUpdatedName = 'Task updated'
+        const { getByTestId } = render(<InfoTask id={taskId} />)
+        fireEvent.change(getByTestId('taskName'), { target : { value: taskUpdatedName }})
+        fireEvent.click(getByTestId('btn-update'))
+        const tasks = localStorage.tasks ? JSON.parse(localStorage.tasks) : []
+        expect(tasks[0].name).toBe(taskUpdatedName)
+    });
 })

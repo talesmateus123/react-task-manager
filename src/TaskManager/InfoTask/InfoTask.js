@@ -59,7 +59,7 @@ function InfoTask(props) {
               required
               value={taskName}
               onChange={handleTask}
-              data-testid="task"
+              data-testid="taskName"
             />
             <Form.Control.Feedback 
               type="invalid"
