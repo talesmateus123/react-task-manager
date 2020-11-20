@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import TaskItems from './TaskItems/TaskItems'
 import Pages from './Pages/Pages'
+import Sorting from './Sorting/Sorting'
 
 function ListTasks() {
 
@@ -16,21 +17,49 @@ function ListTasks() {
   const [ totalItems, setTotalItems] = useState(0)
   const [ currentPage, setCurrentPage ] = useState(1)
 
+  const [ sortAsc, setSortAsc ] = useState(false)
+  const [ sortDesc, setSortDesc ] = useState(false)
+
   const handleChangePage = page => {
     setCurrentPage(page)
     setLoadTasks(true)
   }
 
+  const handleSorting = event => {
+    event.preventDefault()
+    if(!sortAsc && !sortDesc) {
+      setSortAsc(true)
+      setSortDesc(false)
+    }
+    else if(sortAsc) {
+      setSortAsc(false)
+      setSortDesc(true)
+    }
+    else if(sortDesc) {
+      setSortAsc(false)
+      setSortDesc(false)
+    }
+    setLoadTasks(true)
+  }
+
   useEffect(() => {
     const getTasks = () => {
-      const tasks = localStorage.tasks ? JSON.parse(localStorage.tasks) : []
+      let tasks = localStorage.tasks ? JSON.parse(localStorage.tasks) : []
+      // sorting
+      if(sortAsc) {
+        tasks.sort((task1, task2) => task1.name.toLowerCase() > task2.name.toLowerCase() ? 1 : -1)
+      }
+      else if(sortDesc) {
+        tasks.sort((task1, task2) => task1.name.toLowerCase() < task2.name.toLowerCase() ? 1 : -1)
+      }
+      // pagination
       setTotalItems(tasks.length)
       setTasks(tasks.splice((currentPage - 1) * ITEMS_PER_PAGE, ITEMS_PER_PAGE))
     }
     if(loadTasks) {
       getTasks()
     }
-  }, [ loadTasks, currentPage ])
+  }, [ loadTasks, currentPage, sortAsc, sortDesc ])
 
   return (
     <div className="text-center">
@@ -40,7 +69,16 @@ function ListTasks() {
       >
         <thead>
           <tr>
-            <th>Task</th>
+            <th>
+              <a href="/" onClick={handleSorting}>
+                Task
+                &nbsp;
+                <Sorting 
+                  sortAsc={sortAsc}
+                  sortDesc={sortDesc}
+                />
+              </a>
+            </th>
             <th>
               <A 
                 href="/new" 
